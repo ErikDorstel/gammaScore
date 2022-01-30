@@ -14,3 +14,5 @@ ESP32 and GDK101 based Gamma Ray Detector
 * GPIO 19
 #### analog in (analog ray event from gdk101)
 * GPIO 32
+#### Development Hardware
+![IMAGE ALT TEXT HERE](https://www.dorstel.de/github/gammaScore_v1.0.png)
