@@ -1,4 +1,4 @@
-boolean debug=true;
+boolean debug=false;
 
 #include "ray.h"
 #include "WLAN.h"
