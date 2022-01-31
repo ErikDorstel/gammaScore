@@ -59,8 +59,8 @@ function id(id) { return document.getElementById(id); }
 
 <div>
 <div><div class="x3">last Event</div>
-     <div class="x3">average/1 min</div>
-     <div class="x3">average/10 min</div>
+     <div class="x3">1 min average</div>
+     <div class="x3">10 min average</div>
 <div><div class="x3" id="lastEvent"></div>
      <div class="x3" id="current1Min"></div>
      <div class="x3" id="last10Min"></div></div>
