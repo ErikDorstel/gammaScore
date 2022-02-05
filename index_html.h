@@ -40,7 +40,8 @@ function getRay() { requestAJAX('getRay'); }
 function setAlarm() { if (rayAlarm==1) { rayAlarm=0; id("alarmBtn").style.color="#404040"; } else { rayAlarm=1; id("alarmBtn").style.color="#ffffff"; } requestAJAX('setAlarm,'+rayAlarm); }
 
 function doDisplayRay() {
-  avgArray.unshift(min1Avg); while (avgArray.length>480) { avgArray.pop(); } maxAvg=Math.max(...avgArray);
+  avgArray.unshift(min1Avg); while (avgArray.length>480) { avgArray.pop(); }
+  maxAvg=Math.max(...avgArray); if (maxAvg==0) { maxAvg=0.1; }
   xx=id('rayFrame').width; yy=id('rayFrame').height;
   rayFrame=id('rayFrame').getContext('2d');
   rayFrame.clearRect(0,0,xx,yy);
@@ -57,7 +58,7 @@ function doDisplayRay() {
   rayFrame.fillText(scaleRay(maxAvg*0.5),50,116);
   rayFrame.fillText(scaleRay(maxAvg*0.25),50,166);
   rayFrame.fillStyle='rgb(255,255,255)';
-  y=mapValue(min10Avg,0,maxAvg,0,199); rayFrame.fillRect(100,200-y,480,3);
+  y=mapValue(min10Avg,0,maxAvg,0,199); rayFrame.fillRect(100,199-y,480,3);
   rayFrame.fillStyle='rgb(0,0,0)';
   rayFrame.beginPath(); y=mapValue(avgArray[0],0,maxAvg,0,199); rayFrame.moveTo(100,200-y);
   for (x=0;x<avgArray.length;x++) { y=mapValue(avgArray[x],0,maxAvg,0,199); rayFrame.lineTo(x+100,200-y); }
