@@ -25,19 +25,48 @@ td     { text-align:right; }
 <script>
 
 function gammaScoreinit() {
-  ajaxObj=[]; lastEvent=0; current1Min=0; last10Min=0; getRayID=window.setInterval("getRay();",1000);
+  ajaxObj=[]; lastEvent=0; min1Avg=0; min10Avg=0; getRayID=window.setInterval("getRay();",1000); avgArray=[];
   rayAlarm=0; id("alarmBtn").style.color="#404040";
   doDisplay(); }
   
 function doDisplay() {
   id("lastEvent").innerHTML=lastEvent+" µSv/h";
-  id("current1Min").innerHTML=current1Min+" µSv/h";
-  id("last10Min").innerHTML=last10Min+" µSv/h"; }
+  id("min1Avg").innerHTML=min1Avg+" µSv/h";
+  id("min10Avg").innerHTML=min10Avg+" µSv/h"; }
 
 function doRange(doSet) { }
 
 function getRay() { requestAJAX('getRay'); }
 function setAlarm() { if (rayAlarm==1) { rayAlarm=0; id("alarmBtn").style.color="#404040"; } else { rayAlarm=1; id("alarmBtn").style.color="#ffffff"; } requestAJAX('setAlarm,'+rayAlarm); }
+
+function doDisplayRay() {
+  avgArray.unshift(min1Avg); while (avgArray.length>480) { avgArray.pop(); } maxAvg=Math.max(...avgArray);
+  xx=id('rayFrame').width; yy=id('rayFrame').height;
+  rayFrame=id('rayFrame').getContext('2d');
+  rayFrame.clearRect(0,0,xx,yy);
+  rayFrame.fillStyle='rgb(0,0,0)'; rayFrame.strokeStyle='rgb(0,0,0)'; rayFrame.lineWidth=3; rayFrame.font="16px Arial";
+  rayFrame.fillText("µSv/h",0,16);
+  rayFrame.fillText("sec",50,220);
+  rayFrame.fillText("0",100,220);
+  rayFrame.fillText("120",190,220);
+  rayFrame.fillText("240",320,220);
+  rayFrame.fillText("360",435,220);
+  rayFrame.fillText("480",550,220);
+  rayFrame.fillText(scaleRay(maxAvg*1),50,16);
+  rayFrame.fillText(scaleRay(maxAvg*0.75),50,66);
+  rayFrame.fillText(scaleRay(maxAvg*0.5),50,116);
+  rayFrame.fillText(scaleRay(maxAvg*0.25),50,166);
+  rayFrame.fillStyle='rgb(255,255,255)';
+  y=mapValue(min10Avg,0,maxAvg,0,199); rayFrame.fillRect(100,200-y,480,3);
+  rayFrame.fillStyle='rgb(0,0,0)';
+  rayFrame.beginPath(); y=mapValue(avgArray[0],0,maxAvg,0,199); rayFrame.moveTo(100,200-y);
+  for (x=0;x<avgArray.length;x++) { y=mapValue(avgArray[x],0,maxAvg,0,199); rayFrame.lineTo(x+100,200-y); }
+  rayFrame.stroke(); }
+
+function scaleRay(value) {
+  if (value<10) { return Math.round(value*100)/100; }
+  else if (value<100) { return Math.round(value*10)/10; }
+  else { return Math.round(value); } }
 
 function requestAJAX(value) {
   ajaxObj[value]=new XMLHttpRequest; ajaxObj[value].url=value; ajaxObj[value].open("GET",value,true);
@@ -45,7 +74,8 @@ function requestAJAX(value) {
 
 function replyAJAX(event) {
   if (event.target.status==200) {
-    if (event.target.url=="getRay") { lastEvent=event.target.responseText.split(",")[0]*1; current1Min=event.target.responseText.split(",")[1]*1; last10Min=event.target.responseText.split(",")[2]*1; doDisplay(); } } }
+    if (event.target.url=="getRay") { lastEvent=event.target.responseText.split(",")[0]*1; min1Avg=event.target.responseText.split(",")[1]*1; min10Avg=event.target.responseText.split(",")[2]*1;
+                                      doDisplay(); doDisplayRay(); } } }
 
 function mapValue(value,inMin,inMax,outMin,outMax) { return (value-inMin)*(outMax-outMin)/(inMax-inMin)+outMin; }
 function id(id) { return document.getElementById(id); }
@@ -62,8 +92,9 @@ function id(id) { return document.getElementById(id); }
      <div class="x3">1 min average</div>
      <div class="x3">10 min average</div>
 <div><div class="x3" id="lastEvent"></div>
-     <div class="x3" id="current1Min"></div>
-     <div class="x3" id="last10Min"></div></div>
+     <div class="x3" id="min1Avg"></div>
+     <div class="x3" id="min10Avg"></div></div>
+<div><div class="x1"><canvas id="rayFrame" width="580px" height="220px"></canvas></div></div>
 <div><div class="x2" id="alarmBtn" onclick="setAlarm();">Acoustic Alarm</div></div>
 </div>
 
