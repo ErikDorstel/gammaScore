@@ -1,4 +1,4 @@
-unsigned long rayTimer; unsigned long deltaTimer; unsigned long sec6Timer; unsigned long minuteTimer;
+unsigned long rayTimer; unsigned long deltaTimer; unsigned long sec6Timer; unsigned long min1Timer;
 volatile int rayCount; int rayCountArray1[10]; int rayCountArray10[10]; volatile bool alarmEnable; hw_timer_t * timer0=NULL;
 
 void IRAM_ATTR rayISR() { rayCount++; if (alarmEnable) { ledcWrite(0,128); } timerRestart(timer0); }
@@ -19,14 +19,14 @@ void initRay() {
   timerAlarmWrite(timer0,10000,true); timerAlarmEnable(timer0);
   deltaTimer=millis();
   sec6Timer=millis()+6000;
-  minuteTimer=millis()+60000;
+  min1Timer=millis()+60000;
   rayTimer=millis()+1000; }
 
 void rayWorker() {
   if (millis()>=sec6Timer) { sec6Timer=millis()+6000;
     for (int x=8;x>=0;x--) { rayCountArray1[x+1]=rayCountArray1[x]; }
     rayCountArray1[0]=0; if (ray.duration1<10) { ray.duration1++; } }
-  if (millis()>=minuteTimer) { minuteTimer=millis()+60000;
+  if (millis()>=min1Timer) { min1Timer=millis()+60000;
     for (int x=8;x>=0;x--) { rayCountArray10[x+1]=rayCountArray10[x]; }
     rayCountArray10[0]=0; if (ray.duration10<10) { ray.duration10++; } }
   if (millis()>=rayTimer) { rayTimer=millis()+1000; alarmEnable=ray.alarmEnable;

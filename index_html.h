@@ -25,9 +25,9 @@ td     { text-align:right; }
 <script>
 
 function gammaScoreinit() {
-  ajaxObj=[]; lastEvent=0; min1Avg=0; min10Avg=0; getRayID=window.setInterval("getRay();",1000); avgArray=[];
+  ajaxObj=[]; lastEvent=0; min1Avg=0; min10Avg=0; avgArray=[];
   rayAlarm=0; id("alarmBtn").style.color="#404040";
-  doDisplay(); }
+  doDisplay(); doDisplayRay(); getRayID=window.setInterval("getRay();",1000); }
   
 function doDisplay() {
   id("lastEvent").innerHTML=lastEvent+" µSv/h";
@@ -45,23 +45,25 @@ function doDisplayRay() {
   xx=id('rayFrame').width; yy=id('rayFrame').height;
   rayFrame=id('rayFrame').getContext('2d');
   rayFrame.clearRect(0,0,xx,yy);
-  rayFrame.fillStyle='rgb(0,0,0)'; rayFrame.strokeStyle='rgb(0,0,0)'; rayFrame.lineWidth=3; rayFrame.font="16px Arial";
-  rayFrame.fillText("µSv/h",0,16);
-  rayFrame.fillText("sec",50,220);
-  rayFrame.fillText("0",100,220);
-  rayFrame.fillText("120",190,220);
-  rayFrame.fillText("240",320,220);
-  rayFrame.fillText("360",435,220);
-  rayFrame.fillText("480",550,220);
-  rayFrame.fillText(scaleRay(maxAvg*1),50,16);
-  rayFrame.fillText(scaleRay(maxAvg*0.75),50,66);
-  rayFrame.fillText(scaleRay(maxAvg*0.5),50,116);
-  rayFrame.fillText(scaleRay(maxAvg*0.25),50,166);
+  rayFrame.strokeStyle='rgb(0,0,0)'; rayFrame.lineWidth=3; rayFrame.font="16px Arial";
+  rayFrame.fillStyle='rgb(160,160,160)'; rayFrame.fillRect(100,10,480,200); rayFrame.fillStyle='rgb(0,0,0)';
+  rayFrame.fillText("µSv/h",0,10+6);
+  rayFrame.fillText(scaleRay(maxAvg*1),50,10+6); rayFrame.fillRect(94,10-1,6,3);
+  rayFrame.fillText(scaleRay(maxAvg*0.75),50,60+6); rayFrame.fillRect(94,60-1,6,3);
+  rayFrame.fillText(scaleRay(maxAvg*0.5),50,110+6); rayFrame.fillRect(94,110-1,6,3);
+  rayFrame.fillText(scaleRay(maxAvg*0.25),50,160+6); rayFrame.fillRect(94,160-1,6,3);
+  rayFrame.fillText(scaleRay(maxAvg*0),50,210+6); rayFrame.fillRect(94,210-1,6,3);
+  rayFrame.fillText("sec",60,240);
+  rayFrame.fillText("0",100-3,240); rayFrame.fillRect(100,210,3,8);
+  rayFrame.fillText("120",209,240); rayFrame.fillRect(220,210,3,8);
+  rayFrame.fillText("240",328,240); rayFrame.fillRect(339,210,3,8);
+  rayFrame.fillText("360",447,240); rayFrame.fillRect(458,210,3,8);
+  rayFrame.fillText("480",566,240); rayFrame.fillRect(577,210,3,8);
   rayFrame.fillStyle='rgb(255,255,255)';
-  y=mapValue(min10Avg,0,maxAvg,0,199); rayFrame.fillRect(100,199-y,480,3);
+  y=mapValue(min10Avg,0,maxAvg,0,199); rayFrame.fillRect(100,208-y,480,3);
   rayFrame.fillStyle='rgb(0,0,0)';
-  rayFrame.beginPath(); y=mapValue(avgArray[0],0,maxAvg,0,199); rayFrame.moveTo(100,200-y);
-  for (x=0;x<avgArray.length;x++) { y=mapValue(avgArray[x],0,maxAvg,0,199); rayFrame.lineTo(x+100,200-y); }
+  rayFrame.beginPath(); y=mapValue(avgArray[0],0,maxAvg,0,199); rayFrame.moveTo(100,209-y);
+  for (x=0;x<avgArray.length;x++) { y=mapValue(avgArray[x],0,maxAvg,0,199); rayFrame.lineTo(x+100,209-y); }
   rayFrame.stroke(); }
 
 function scaleRay(value) {
@@ -95,7 +97,7 @@ function id(id) { return document.getElementById(id); }
 <div><div class="x3" id="lastEvent"></div>
      <div class="x3" id="min1Avg"></div>
      <div class="x3" id="min10Avg"></div></div>
-<div><div class="x1"><canvas id="rayFrame" width="580px" height="220px"></canvas></div></div>
+<div><div class="x1"><canvas id="rayFrame" width="600px" height="240px"></canvas></div></div>
 <div><div class="x2" id="alarmBtn" onclick="setAlarm();">Acoustic Alarm</div></div>
 </div>
 
