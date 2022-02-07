@@ -41,7 +41,7 @@ function setAlarm() { if (rayAlarm==1) { rayAlarm=0; id("alarmBtn").style.color=
 
 function doDisplayRay() {
   avgArray.unshift(min1Avg); while (avgArray.length>480) { avgArray.pop(); }
-  maxAvg=Math.max(...avgArray); if (maxAvg==0) { maxAvg=0.1; }
+  maxAvg=Math.max(...avgArray,0.1,min1Avg,min10Avg);
   xx=id('rayFrame').width; yy=id('rayFrame').height;
   rayFrame=id('rayFrame').getContext('2d');
   rayFrame.clearRect(0,0,xx,yy);
