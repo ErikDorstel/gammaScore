@@ -37,6 +37,7 @@ function doDisplay() {
 function doRange(doSet) { }
 
 function getRay() { requestAJAX('getRay'); }
+function clearRay() { id("clearBtn").style.color="#404040"; avgArray=[]; lastEvent=0; min1Avg=0; min10Avg=0; requestAJAX('clearRay'); doDisplay(); doDisplayRay(); }
 function setAlarm() { if (rayAlarm==1) { rayAlarm=0; id("alarmBtn").style.color="#404040"; } else { rayAlarm=1; id("alarmBtn").style.color="#ffffff"; } requestAJAX('setAlarm,'+rayAlarm); }
 
 function doDisplayRay() {
@@ -78,7 +79,8 @@ function requestAJAX(value) {
 function replyAJAX(event) {
   if (event.target.status==200) {
     if (event.target.url=="getRay") { lastEvent=event.target.responseText.split(",")[0]*1; min1Avg=event.target.responseText.split(",")[1]*1; min10Avg=event.target.responseText.split(",")[2]*1;
-                                      doDisplay(); doDisplayRay(); } } }
+                                      doDisplay(); doDisplayRay(); }
+    if (event.target.url=="clearRay") { id("clearBtn").style.color="#ffffff"; } } }
 
 function mapValue(value,inMin,inMax,outMin,outMax) { return (value-inMin)*(outMax-outMin)/(inMax-inMin)+outMin; }
 function id(id) { return document.getElementById(id); }
@@ -98,7 +100,8 @@ function id(id) { return document.getElementById(id); }
      <div class="x3" id="min1Avg"></div>
      <div class="x3" id="min10Avg"></div></div>
 <div><div class="x1"><canvas id="rayFrame" width="600px" height="240px"></canvas></div></div>
-<div><div class="x2" id="alarmBtn" onclick="setAlarm();">Acoustic Alarm</div></div>
+<div><div class="x2" id="alarmBtn" onclick="setAlarm();">Acoustic Alarm</div>
+     <div class="x2" id="clearBtn" onclick="clearRay();">Clear Measurement</div></div>
 </div>
 
 </body></html>

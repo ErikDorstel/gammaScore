@@ -9,18 +9,21 @@ struct rayStruct {
   int lastEventClicks; int min1Clicks; int min10Clicks;
   float lastEventSv; float min1Sv; float min10Sv; }; struct rayStruct ray;
 
+void clearRay() {
+  ray.duration1=1; ray.duration10=1; rayCount=0;
+  ray.lastEventClicks=0; ray.min1Clicks=0; ray.min10Clicks=0;
+  ray.lastEventSv=0; ray.min1Sv=0; ray.min10Sv=0;
+  for (int x=0;x<=9;x++) { rayCountArray1[x]=0; rayCountArray10[x]=0; } }
+
 void initRay() {
-  ray.alarmEnable=false; alarmEnable=ray.alarmEnable; ray.duration1=1; ray.duration10=1; rayCount=0;
-  for (int x=0;x<=9;x++) { rayCountArray1[x]=0; rayCountArray10[x]=0; }
+  ray.alarmEnable=false; alarmEnable=ray.alarmEnable; clearRay();
   pinMode(18,INPUT); attachInterrupt(18,rayISR,RISING);
   analogSetPinAttenuation(32,ADC_0db); //int a=analogRead(32); if (a>0) { Serial.println(map(a,0,4095,100,950)); }
   ledcSetup(0,100,8); ledcAttachPin(19,0);
   timer0=timerBegin(0,80,true); timerAttachInterrupt(timer0,&timer0ISR,true);
   timerAlarmWrite(timer0,10000,true); timerAlarmEnable(timer0);
-  deltaTimer=millis();
-  sec6Timer=millis()+6000;
-  min1Timer=millis()+60000;
-  rayTimer=millis()+1000; }
+  deltaTimer=millis(); rayTimer=millis()+1000;
+  sec6Timer=millis()+6000; min1Timer=millis()+60000; }
 
 void rayWorker() {
   if (millis()>=sec6Timer) { sec6Timer=millis()+6000;

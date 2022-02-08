@@ -7,6 +7,8 @@ String httpget(String request) {
 
   else if (request.indexOf("/setAlarm")>=0) { int a=request.indexOf(",")+1; ray.alarmEnable=request.substring(a).toInt(); }
 
+  else if (request.indexOf("/clearRay")>=0) { clearRay(); }
+
   // WLAN Choose specific pages
 
   else if (request.indexOf("/chooseAP")>=0) { response=choose_html; }
