@@ -25,20 +25,21 @@ td     { text-align:right; }
 <script>
 
 function gammaScoreinit() {
-  ajaxObj=[]; lastEvent=0; min1Avg=0; min10Avg=0; avgArray=[];
-  rayAlarm=0; id("alarmBtn").style.color="#404040";
+  ajaxObj=[]; lastEvent=0; min1Avg=0; min10Avg=0; avgArray=[]; rayAlarm=0; getAlarm();
   doDisplay(); doDisplayRay(); getRayID=window.setInterval("getRay();",1000); }
   
 function doDisplay() {
   id("lastEvent").innerHTML=lastEvent+" µSv/h";
   id("min1Avg").innerHTML=min1Avg+" µSv/h";
-  id("min10Avg").innerHTML=min10Avg+" µSv/h"; }
+  id("min10Avg").innerHTML=min10Avg+" µSv/h";
+  if (rayAlarm==1) { id("alarmBtn").style.color="#ffffff"; } else { id("alarmBtn").style.color="#404040"; } }
 
 function doRange(doSet) { }
 
 function getRay() { requestAJAX('getRay'); }
 function clearRay() { id("clearBtn").style.color="#404040"; avgArray=[]; lastEvent=0; min1Avg=0; min10Avg=0; requestAJAX('clearRay'); doDisplay(); doDisplayRay(); }
-function setAlarm() { if (rayAlarm==1) { rayAlarm=0; id("alarmBtn").style.color="#404040"; } else { rayAlarm=1; id("alarmBtn").style.color="#ffffff"; } requestAJAX('setAlarm,'+rayAlarm); }
+function getAlarm() { requestAJAX('getAlarm'); }
+function setAlarm() { if (rayAlarm==1) { rayAlarm=0; } else { rayAlarm=1; } requestAJAX('setAlarm,'+rayAlarm); doDisplay(); }
 
 function doDisplayRay() {
   avgArray.unshift(min1Avg); while (avgArray.length>480) { avgArray.pop(); }
@@ -78,8 +79,9 @@ function requestAJAX(value) {
 
 function replyAJAX(event) {
   if (event.target.status==200) {
-    if (event.target.url=="getRay") { lastEvent=event.target.responseText.split(",")[0]*1; min1Avg=event.target.responseText.split(",")[1]*1; min10Avg=event.target.responseText.split(",")[2]*1;
-                                      doDisplay(); doDisplayRay(); }
+    if (event.target.url=="getRay") { lastEvent=event.target.responseText.split(",")[0]*1; min1Avg=event.target.responseText.split(",")[1]*1;
+                                      min10Avg=event.target.responseText.split(",")[2]*1; doDisplay(); doDisplayRay(); }
+    if (event.target.url=="getAlarm") { rayAlarm=event.target.responseText.split(",")[0]*1; doDisplay(); }
     if (event.target.url=="clearRay") { id("clearBtn").style.color="#ffffff"; } } }
 
 function mapValue(value,inMin,inMax,outMin,outMax) { return (value-inMin)*(outMax-outMin)/(inMax-inMin)+outMin; }

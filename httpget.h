@@ -5,6 +5,8 @@ String httpget(String request) {
 
   if (request.indexOf("/getRay")>=0) { response+=String(ray.lastEventSv) + "," + String(ray.min1Sv) + "," + String(ray.min10Sv) + ","; }
 
+  else if (request.indexOf("/getAlarm")>=0) { response+=String(ray.alarmEnable) + ","; }
+
   else if (request.indexOf("/setAlarm")>=0) { int a=request.indexOf(",")+1; ray.alarmEnable=request.substring(a).toInt(); }
 
   else if (request.indexOf("/clearRay")>=0) { clearRay(); }
