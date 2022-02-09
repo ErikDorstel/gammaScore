@@ -45,8 +45,7 @@ function doDisplayRay() {
   avgArray.unshift(min1Avg); while (avgArray.length>480) { avgArray.pop(); }
   maxAvg=Math.max(...avgArray,0.1,min1Avg,min10Avg);
   xx=id('rayFrame').width; yy=id('rayFrame').height;
-  rayFrame=id('rayFrame').getContext('2d');
-  rayFrame.clearRect(0,0,xx,yy);
+  rayFrame=id('rayFrame').getContext('2d'); rayFrame.clearRect(0,0,xx,yy);
   rayFrame.strokeStyle='rgb(0,0,0)'; rayFrame.lineWidth=3; rayFrame.font="16px Arial";
   rayFrame.fillStyle='rgb(160,160,160)'; rayFrame.fillRect(100,10,480,200); rayFrame.fillStyle='rgb(0,0,0)';
   rayFrame.fillText("µSv/h",0,10+6);
@@ -57,10 +56,10 @@ function doDisplayRay() {
   rayFrame.fillText(scaleRay(maxAvg*0),50,210+6); rayFrame.fillRect(94,210-1,6,3);
   rayFrame.fillText("sec",60,240);
   rayFrame.fillText("0",100-3,240); rayFrame.fillRect(100,210,3,8);
-  rayFrame.fillText("120",209,240); rayFrame.fillRect(220,210,3,8);
-  rayFrame.fillText("240",328,240); rayFrame.fillRect(339,210,3,8);
-  rayFrame.fillText("360",447,240); rayFrame.fillRect(458,210,3,8);
-  rayFrame.fillText("480",566,240); rayFrame.fillRect(577,210,3,8);
+  rayFrame.fillText("120",220-12,240); rayFrame.fillRect(220-1,210,3,8);
+  rayFrame.fillText("240",340-12,240); rayFrame.fillRect(340-1,210,3,8);
+  rayFrame.fillText("360",460-12,240); rayFrame.fillRect(460-1,210,3,8);
+  rayFrame.fillText("480",580-14,240); rayFrame.fillRect(580-3,210,3,8);
   rayFrame.fillStyle='rgb(255,255,255)';
   y=mapValue(min10Avg,0,maxAvg,0,199); rayFrame.fillRect(100,208-y,480,3);
   rayFrame.fillStyle='rgb(0,0,0)';
