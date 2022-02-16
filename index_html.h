@@ -39,7 +39,8 @@ function doRange(doSet) { }
 function getRay() { requestAJAX('getRay'); }
 function clearRay() {
   id("clearBtn").style.color="#404040"; avgArray=[]; lastEvent=0; min1Avg=0; min10Avg=0;
-  histArray={lastEvent:[],count:[]}; histTime=0; lastHistTime=0; requestAJAX('clearRay'); doDisplay(); doDisplayRay(); }
+  histArray={lastEvent:[],count:[]}; histTime=0; lastHistTime=0;
+  requestAJAX('clearRay'); doDisplay(); doDisplayRay(); doDisplayHist(); }
 function getAlarm() { requestAJAX('getAlarm'); }
 function setAlarm() { if (rayAlarm==1) { rayAlarm=0; } else { rayAlarm=1; } requestAJAX('setAlarm,'+rayAlarm); doDisplay(); }
 
