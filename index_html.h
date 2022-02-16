@@ -25,8 +25,8 @@ td     { text-align:right; }
 <script>
 
 function gammaScoreinit() {
-  ajaxObj=[]; lastEvent=0; min1Avg=0; min10Avg=0; avgArray=[]; rayAlarm=0; getAlarm();
-  doDisplay(); doDisplayRay(); getRayID=window.setInterval("getRay();",1000); }
+  ajaxObj=[]; lastEvent=0; min1Avg=0; min10Avg=0; avgArray=[]; histArray={lastEvent:[],count:[]}; histTime=0; lastHistTime=0; rayAlarm=0; getAlarm();
+  doDisplay(); doDisplayRay(); doDisplayHist(); getRayID=window.setInterval("getRay();",1000); }
   
 function doDisplay() {
   id("lastEvent").innerHTML=lastEvent+" µSv/h";
@@ -37,7 +37,9 @@ function doDisplay() {
 function doRange(doSet) { }
 
 function getRay() { requestAJAX('getRay'); }
-function clearRay() { id("clearBtn").style.color="#404040"; avgArray=[]; lastEvent=0; min1Avg=0; min10Avg=0; requestAJAX('clearRay'); doDisplay(); doDisplayRay(); }
+function clearRay() {
+  id("clearBtn").style.color="#404040"; avgArray=[]; lastEvent=0; min1Avg=0; min10Avg=0;
+  histArray={lastEvent:[],count:[]}; histTime=0; lastHistTime=0; requestAJAX('clearRay'); doDisplay(); doDisplayRay(); }
 function getAlarm() { requestAJAX('getAlarm'); }
 function setAlarm() { if (rayAlarm==1) { rayAlarm=0; } else { rayAlarm=1; } requestAJAX('setAlarm,'+rayAlarm); doDisplay(); }
 
@@ -67,6 +69,33 @@ function doDisplayRay() {
   for (x=0;x<avgArray.length;x++) { y=mapValue(avgArray[x],0,maxAvg,0,199); rayFrame.lineTo(x+100,209-y); }
   rayFrame.stroke(); }
 
+function doDisplayHist() {
+  if (histTime>lastHistTime) { lastHistTime=histTime; i=histArray.lastEvent.lastIndexOf(lastEvent);
+  histArray.lastEvent.push(lastEvent); if (i==-1) { histArray.count.push(1); } else { y=histArray.count[i]+1; histArray.count.push(y); }
+    while (histArray.lastEvent.length>480) { histArray.lastEvent.shift(); histArray.count.shift(); } }
+  maxLastEvent=Math.max(...histArray.lastEvent,0.1);
+  maxCount=Math.max(...histArray.count,1);
+  xx=id('histFrame').width; yy=id('histFrame').height;
+  histFrame=id('histFrame').getContext('2d'); histFrame.clearRect(0,0,xx,yy);
+  histFrame.strokeStyle='rgb(0,0,0)'; histFrame.lineWidth=3; histFrame.font="16px Arial";
+  histFrame.fillStyle='rgb(160,160,160)'; histFrame.fillRect(100,10,480,200); histFrame.fillStyle='rgb(0,0,0)';
+  histFrame.fillText("Count",0,10+6);
+  histFrame.fillText(scaleRay(maxCount*1),50,10+6); histFrame.fillRect(94,10-1,6,3);
+  if (maxCount>2) { histFrame.fillText(scaleRay(maxCount*0.75),50,60+6); histFrame.fillRect(94,60-1,6,3); }
+  if (maxCount>1) { histFrame.fillText(scaleRay(maxCount*0.5),50,110+6); histFrame.fillRect(94,110-1,6,3); }
+  if (maxCount>2) { histFrame.fillText(scaleRay(maxCount*0.25),50,160+6); histFrame.fillRect(94,160-1,6,3); }
+  histFrame.fillText(scaleRay(maxCount*0),50,210+6); histFrame.fillRect(94,210-1,6,3);
+  histFrame.fillText("µSv/h",40,240);
+  histFrame.fillText(scaleRay(maxLastEvent*1),100-3,240); histFrame.fillRect(100,210,3,8);
+  histFrame.fillText(scaleRay(maxLastEvent*0.75),220-12,240); histFrame.fillRect(220-1,210,3,8);
+  histFrame.fillText(scaleRay(maxLastEvent*0.5),340-12,240); histFrame.fillRect(340-1,210,3,8);
+  histFrame.fillText(scaleRay(maxLastEvent*0.25),460-12,240); histFrame.fillRect(460-1,210,3,8);
+  histFrame.fillText(scaleRay(maxLastEvent*0),580-5,240); histFrame.fillRect(580-3,210,3,8);
+  for (a=0;a<histArray.lastEvent.length;a++) {
+    c=mapValue(a,0,histArray.lastEvent.length-1,128,0); histFrame.fillStyle='rgb('+c+','+c+','+c+')';
+    y=mapValue(histArray.count[a],0,maxCount,0,200);
+    x=mapValue(histArray.lastEvent[a],0,maxLastEvent,479,0); histFrame.fillRect(100+x,210-y,3,y); } }
+
 function scaleRay(value) {
   if (value<10) { return Math.round(value*100)/100; }
   else if (value<100) { return Math.round(value*10)/10; }
@@ -79,12 +108,14 @@ function requestAJAX(value) {
 function replyAJAX(event) {
   if (event.target.status==200) {
     if (event.target.url=="getRay") { lastEvent=event.target.responseText.split(",")[0]*1; min1Avg=event.target.responseText.split(",")[1]*1;
-                                      min10Avg=event.target.responseText.split(",")[2]*1; doDisplay(); doDisplayRay(); }
+                                      min10Avg=event.target.responseText.split(",")[2]*1; histTime=event.target.responseText.split(",")[3]*1;
+                                      doDisplay(); doDisplayRay(); doDisplayHist(); }
     if (event.target.url=="getAlarm") { rayAlarm=event.target.responseText.split(",")[0]*1; doDisplay(); }
     if (event.target.url=="clearRay") { id("clearBtn").style.color="#ffffff"; } } }
 
 function mapValue(value,inMin,inMax,outMin,outMax) { return (value-inMin)*(outMax-outMin)/(inMax-inMin)+outMin; }
 function id(id) { return document.getElementById(id); }
+function logx(x,y) { return Math.log(y)/Math.log(x); }
 
 </script></head><body onload="gammaScoreinit();">
 
@@ -101,6 +132,7 @@ function id(id) { return document.getElementById(id); }
      <div class="x3" id="min1Avg"></div>
      <div class="x3" id="min10Avg"></div></div>
 <div><div class="x1"><canvas id="rayFrame" width="600px" height="240px"></canvas></div></div>
+<div><div class="x1"><canvas id="histFrame" width="600px" height="240px"></canvas></div></div>
 <div><div class="x2" id="alarmBtn" onclick="setAlarm();">Acoustic Alarm</div>
      <div class="x2" id="clearBtn" onclick="clearRay();">Clear Measurement</div></div>
 </div>

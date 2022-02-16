@@ -3,7 +3,7 @@ String httpget(String request) {
 
   // gammaScore specific pages
 
-  if (request.indexOf("/getRay")>=0) { response+=String(ray.lastEventSv) + "," + String(ray.min1Sv) + "," + String(ray.min10Sv) + ","; }
+  if (request.indexOf("/getRay")>=0) { response+=String(ray.lastEventSv) + "," + String(ray.min1Sv) + "," + String(ray.min10Sv) + "," + String(ray.lastEventTime) + ","; }
 
   else if (request.indexOf("/getAlarm")>=0) { response+=String(ray.alarmEnable) + ","; }
 
