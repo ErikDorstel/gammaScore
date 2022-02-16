@@ -8,7 +8,8 @@ ESP32 and GDK101 based Gamma Ray Detector
 * measurement of last event gamma ray in µSv/h
 * measurement of 1 minute average gamma ray in µSv/h
 * measurement of 10 minute average ray in µSv/h
-* WebUI graph with autoscale
+* WebUI gamma average graph with autoscale
+* WebUI gamma event histogram with autoscale
 #### digital in (digital ray event from gdk101)
 * GPIO 18
 #### digital out (acoustic alarm)
@@ -18,4 +19,4 @@ ESP32 and GDK101 based Gamma Ray Detector
 #### Development Hardware
 ![IMAGE ALT TEXT HERE](https://www.dorstel.de/github/gammaScore_b_v1.0.png)
 #### Web UI Screenshot
-![IMAGE ALT TEXT HERE](https://www.dorstel.de/github/gammaScore_a_v1.2.png)
+![IMAGE ALT TEXT HERE](https://www.dorstel.de/github/gammaScore_a_v1.3.png)
