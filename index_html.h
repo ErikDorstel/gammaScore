@@ -73,9 +73,10 @@ function doDisplayRay() {
 function doDisplayHist() {
   if (histTime>lastHistTime) { lastHistTime=histTime; i=histArray.lastEvent.lastIndexOf(lastEvent);
     if (i==-1) { histArray.lastEvent.push(lastEvent); histArray.count.push(1); }
-    else { y=histArray.count[i]+1; histArray.lastEvent.splice(i,1); histArray.count.splice(i,1);
-      histArray.lastEvent.push(lastEvent); histArray.count.push(y); }
-    while (histArray.lastEvent.length>480) { histArray.lastEvent.shift(); histArray.count.shift(); } }
+    else { y=histArray.count[i]; histArray.count[i]=0; histArray.lastEvent.push(lastEvent); histArray.count.push(y+1); }
+    while (histArray.lastEvent.length>480) { if (histArray.count[0]==0) {
+        histArray.count[histArray.lastEvent.lastIndexOf(histArray.lastEvent[0])]--; }
+      histArray.lastEvent.shift(); histArray.count.shift(); } }
   maxLastEvent=Math.max(...histArray.lastEvent,1);
   maxCount=Math.max(...histArray.count,1);
   xx=id('histFrame').width; yy=id('histFrame').height;
@@ -99,15 +100,15 @@ function doDisplayHist() {
   x=mapValue(scaleRoot(maxLastEvent*0.01),0,scaleRoot(maxLastEvent),479,0);
     histFrame.fillText(scaleRay(maxLastEvent*0.01),100+x-3,240); histFrame.fillRect(100+x,210,3,8);
   histFrame.fillText(scaleRay(maxLastEvent*0),580-6,240); histFrame.fillRect(580-3,210,3,8);
-  last5Array=[]; for (a=0;a<histArray.lastEvent.length;a++) {
+  last5Array=[]; for (a=0;a<histArray.lastEvent.length;a++) { if (histArray.count[a]>0) {
     c=mapValue(a,0,histArray.lastEvent.length-1,128,0); histFrame.fillStyle='rgb('+c+','+c+','+c+')';
     y=mapValue(histArray.count[a],0,maxCount,0,200);
     x=mapValue(scaleRoot(histArray.lastEvent[a]),0,scaleRoot(maxLastEvent),479,0); histFrame.fillRect(100+x,210-y,3,y);
-    if (a>histArray.lastEvent.length-6) { last5Array.push({"x":100+x,"y":210-y}); } }
+    if (a>histArray.lastEvent.length-6) { last5Array.push({"x":100+x,"y":210-y}); } } }
   last5Array.sort(function(m,n) { return ( (m.x<n.x) ? -1 : ((m.x==n.x) ? 0 : 1) ); });
   histFrame.fillStyle='rgb(255,255,255)'; histFrame.lineWidth=3; histFrame.strokeStyle='rgb(220,220,220)';
   for (a=0;a<last5Array.length;a++) { if (a<last5Array.length-1) {
-      histFrame.beginPath(); histFrame.moveTo(last5Array[a].x+1,last5Array[a].y+3);
+      histFrame.beginPath(); histFrame.moveTo(last5Array[a].x+2,last5Array[a].y+3);
       histFrame.lineTo(last5Array[a+1].x+1,last5Array[a+1].y+3); histFrame.stroke(); }
     histFrame.fillRect(last5Array[a].x-1,last5Array[a].y,5,5); } }
 
