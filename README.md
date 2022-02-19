@@ -19,4 +19,4 @@ ESP32 and GDK101 based Gamma Ray Detector
 #### Development Hardware
 ![IMAGE ALT TEXT HERE](https://www.dorstel.de/github/gammaScore_b_v1.0.png)
 #### Web UI Screenshot
-![IMAGE ALT TEXT HERE](https://www.dorstel.de/github/gammaScore_a_v1.6.png)
+![IMAGE ALT TEXT HERE](https://www.dorstel.de/github/gammaScore_a_v1.7.png)
