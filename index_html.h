@@ -45,12 +45,12 @@ function getAlarm() { requestAJAX('getAlarm'); }
 function setAlarm() { if (rayAlarm==1) { rayAlarm=0; } else { rayAlarm=1; } requestAJAX('setAlarm,'+rayAlarm); doDisplay(); }
 
 function doDisplayRay() {
-  avgArray.unshift(min1Avg); while (avgArray.length>480) { avgArray.pop(); }
+  avgArray.unshift(min1Avg); while (avgArray.length>600) { avgArray.pop(); }
   maxAvg=Math.max(...avgArray,0.1,min1Avg,min10Avg);
   xx=id('rayFrame').width; yy=id('rayFrame').height;
   rayFrame=id('rayFrame').getContext('2d'); rayFrame.clearRect(0,0,xx,yy);
   rayFrame.strokeStyle='rgb(0,0,0)'; rayFrame.lineWidth=3; rayFrame.font="16px Arial";
-  rayFrame.fillStyle='rgb(160,160,160)'; rayFrame.fillRect(100,10,480,200); rayFrame.fillStyle='rgb(0,0,0)';
+  rayFrame.fillStyle='rgb(160,160,160)'; rayFrame.fillRect(100,10,600,200); rayFrame.fillStyle='rgb(0,0,0)';
   rayFrame.fillText("µSv/h",0,10+6);
   rayFrame.fillText(scaleRay(maxAvg*1),50,10+6); rayFrame.fillRect(94,10-1,6,3);
   rayFrame.fillText(scaleRay(maxAvg*0.75),50,60+6); rayFrame.fillRect(94,60-1,6,3);
@@ -62,9 +62,10 @@ function doDisplayRay() {
   rayFrame.fillText("120",220-12,240); rayFrame.fillRect(220-1,210,3,8);
   rayFrame.fillText("240",340-12,240); rayFrame.fillRect(340-1,210,3,8);
   rayFrame.fillText("360",460-12,240); rayFrame.fillRect(460-1,210,3,8);
-  rayFrame.fillText("480",580-14,240); rayFrame.fillRect(580-3,210,3,8);
+  rayFrame.fillText("480",580-12,240); rayFrame.fillRect(580-1,210,3,8);
+  rayFrame.fillText("600",700-14,240); rayFrame.fillRect(700-3,210,3,8);
   rayFrame.fillStyle='rgb(255,255,255)';
-  y=mapValue(min10Avg,0,maxAvg,0,199); rayFrame.fillRect(100,208-y,480,3);
+  y=mapValue(min10Avg,0,maxAvg,0,199); rayFrame.fillRect(100,208-y,600,3);
   rayFrame.fillStyle='rgb(0,0,0)';
   rayFrame.beginPath(); y=mapValue(avgArray[0],0,maxAvg,0,199); rayFrame.moveTo(100,209-y);
   for (x=0;x<avgArray.length;x++) { y=mapValue(avgArray[x],0,maxAvg,0,199); rayFrame.lineTo(x+100,209-y); }
@@ -83,7 +84,7 @@ function doDisplayHist() {
   xx=id('histFrame').width; yy=id('histFrame').height;
   histFrame=id('histFrame').getContext('2d'); histFrame.clearRect(0,0,xx,yy);
   histFrame.strokeStyle='rgb(0,0,0)'; histFrame.lineWidth=3; histFrame.font="16px Arial";
-  histFrame.fillStyle='rgb(160,160,160)'; histFrame.fillRect(100,10,480,200); histFrame.fillStyle='rgb(0,0,0)';
+  histFrame.fillStyle='rgb(160,160,160)'; histFrame.fillRect(100,10,600,200); histFrame.fillStyle='rgb(0,0,0)';
   histFrame.fillText("Count",0,10+6);
   histFrame.fillText(scaleRay(maxCount*1),50,10+6); histFrame.fillRect(94,10-1,6,3);
   if (maxCount>2) { histFrame.fillText(scaleRay(maxCount*0.75),50,60+6); histFrame.fillRect(94,60-1,6,3); }
@@ -92,19 +93,19 @@ function doDisplayHist() {
   histFrame.fillText(scaleRay(maxCount*0),50,210+6); histFrame.fillRect(94,210-1,6,3);
   histFrame.fillText("µSv/h",40,240);
   histFrame.fillText(scaleRay(maxLastEvent*1),100-3,240); histFrame.fillRect(100,210,3,8);
-  x=mapValue(scaleRoot(maxLastEvent*0.5),0,scaleRoot(maxLastEvent),479,0);
+  x=mapValue(scaleRoot(maxLastEvent*0.5),0,scaleRoot(maxLastEvent),599,0);
     histFrame.fillText(scaleRay(maxLastEvent*0.5),100+x-3,240); histFrame.fillRect(100+x,210,3,8);
-  x=mapValue(scaleRoot(maxLastEvent*0.1),0,scaleRoot(maxLastEvent),479,0);
+  x=mapValue(scaleRoot(maxLastEvent*0.1),0,scaleRoot(maxLastEvent),599,0);
     histFrame.fillText(scaleRay(maxLastEvent*0.1),100+x-3,240); histFrame.fillRect(100+x,210,3,8);
-  x=mapValue(scaleRoot(maxLastEvent*0.05),0,scaleRoot(maxLastEvent),479,0);
+  x=mapValue(scaleRoot(maxLastEvent*0.05),0,scaleRoot(maxLastEvent),599,0);
     histFrame.fillText(scaleRay(maxLastEvent*0.05),100+x-3,240); histFrame.fillRect(100+x,210,3,8);
-  x=mapValue(scaleRoot(maxLastEvent*0.01),0,scaleRoot(maxLastEvent),479,0);
+  x=mapValue(scaleRoot(maxLastEvent*0.01),0,scaleRoot(maxLastEvent),599,0);
     histFrame.fillText(scaleRay(maxLastEvent*0.01),100+x-3,240); histFrame.fillRect(100+x,210,3,8);
-  histFrame.fillText(scaleRay(maxLastEvent*0),580-6,240); histFrame.fillRect(580-3,210,3,8);
+  histFrame.fillText(scaleRay(maxLastEvent*0),700-6,240); histFrame.fillRect(700-3,210,3,8);
   last5Array=[]; for (a=0;a<histArray.lastEvent.length;a++) { if (histArray.count[a]>0) {
     c=mapValue(a,0,histArray.lastEvent.length-1,128,0); histFrame.fillStyle='rgb('+c+','+c+','+c+')';
     y=mapValue(histArray.count[a],0,maxCount,0,200);
-    x=mapValue(scaleRoot(histArray.lastEvent[a]),0,scaleRoot(maxLastEvent),479,0);
+    x=mapValue(scaleRoot(histArray.lastEvent[a]),0,scaleRoot(maxLastEvent),599,0);
     histFrame.fillRect(100+x,210-y,3,y); last5Array.push({"x":100+x,"y":210-y}); } }
   if (last5Array.length>5) { last5Array.splice(0,last5Array.length-5); }
   last5Array.sort(function(m,n) { return ( (m.x<n.x) ? -1 : ((m.x==n.x) ? 0 : 1) ); });
@@ -150,8 +151,8 @@ function id(id) { return document.getElementById(id); }
 <div><div class="x3" id="lastEvent"></div>
      <div class="x3" id="min1Avg"></div>
      <div class="x3" id="min10Avg"></div></div>
-<div><div class="x1"><canvas id="rayFrame" width="600px" height="240px"></canvas></div></div>
-<div><div class="x1"><canvas id="histFrame" width="600px" height="240px"></canvas></div></div>
+<div><div class="x1"><canvas id="rayFrame" width="720px" height="240px"></canvas></div></div>
+<div><div class="x1"><canvas id="histFrame" width="720px" height="240px"></canvas></div></div>
 <div><div class="x2" id="alarmBtn" onclick="setAlarm();">Acoustic Alarm</div>
      <div class="x2" id="clearBtn" onclick="clearRay();">Clear Measurement</div></div>
 </div>
