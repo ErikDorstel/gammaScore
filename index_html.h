@@ -151,8 +151,8 @@ function id(id) { return document.getElementById(id); }
 <div><div class="x3" id="lastEvent"></div>
      <div class="x3" id="min1Avg"></div>
      <div class="x3" id="min10Avg"></div></div>
-<div><div class="x1"><canvas id="rayFrame" width="720px" height="240px"></canvas></div></div>
-<div><div class="x1"><canvas id="histFrame" width="720px" height="240px"></canvas></div></div>
+<div><div class="x1"><canvas id="rayFrame" width="720px" height="245px"></canvas></div></div>
+<div><div class="x1"><canvas id="histFrame" width="720px" height="245px"></canvas></div></div>
 <div><div class="x2" id="alarmBtn" onclick="setAlarm();">Acoustic Alarm</div>
      <div class="x2" id="clearBtn" onclick="clearRay();">Clear Measurement</div></div>
 </div>
