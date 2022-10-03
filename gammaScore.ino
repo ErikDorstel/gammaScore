@@ -1,4 +1,7 @@
-boolean debug=false;
+boolean debug=true;
+
+const char* appName="gammaScore";
+const char* appDesc="Gamma Ray Detector";
 
 #include "ray.h"
 #include "WLAN.h"
@@ -8,6 +11,8 @@ boolean debug=false;
 void setup() {
   if (debug) { Serial.begin(115200); }
   initWLAN();
+  initDNS();
+  initHTTP();
   initRay(); }
 
-void loop() { httpWorker(); dnsWorker(); rayWorker(); }
+void loop() { wlanWorker(); httpWorker(); dnsWorker(); rayWorker(); }

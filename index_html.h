@@ -1,4 +1,4 @@
-char *index_html=R"(
+const char *index_html=R"(
 
 <!DOCTYPE html>
 <html lang="en"><head>
@@ -10,35 +10,37 @@ char *index_html=R"(
 <meta charset="utf-8">
 <style>
 html   { font-family:Arial; }
-div    { background-color:#888888; color:#ffffff; border:0px; padding:0px; margin:0px; text-align:center; width:100%; user-select:none; display:inline-block; }
-select { background-color:#888888; color:#ffffff; font-size:1.0em; border:0px; padding:0px; margin:0px; }
+div    { background-color:#e0e0e0; color:#000000; border:0px; padding:0px; margin:0px; text-align:center; width:100%; user-select:none; display:inline-block; }
+select { background-color:#f0f0f0; color:#000000; font-size:1.0em; border:0px; padding:0px; margin:0px; }
 table  { margin-left:auto; margin-right:auto; }
 td     { text-align:right; }
-.x0a   { background-color:#C0A0A0; padding:0.2em 0em 0.1em; width:100%; font-size:1.5em; }
-.x0b   { background-color:#C0A0A0; padding:0.1em 0em 0.2em; width:100%; font-size:1.2em; }
-.x0    { background-color:#C0A0A0; padding:0.3em 0em; width:100%; font-size:1.4em; }
-.x1    { background-color:#A0B0C0; padding:0.3em 0em; width:100%; font-size:1.4em; }
-.x2    { background-color:#888888; padding:0.3em 0em; width:48%; font-size:1.4em; }
-.x3    { background-color:#888888; padding:0.3em 0em; width:32%; font-size:1.4em; }
-.x4    { background-color:#888888; padding:0.3em 0em; width:24%; font-size:1.4em; }
+.x0a   { background-color:#c2d5ed; padding:0.2em 0em 0.1em; width:100%; font-size:1.5em; }
+.x0b   { background-color:#c2d5ed; padding:0.1em 0em 0.2em; width:100%; font-size:1.2em; }
+.x0    { background-color:#c2d5ed; padding:0.3em 0em; width:100%; font-size:1.4em; }
+.x1    { background-color:#f0f0f0; padding:0.3em 0em; width:100%; font-size:1.4em; }
+.x1a   { background-color:#e0e0e0; padding:0.3em 0em; width:100%; font-size:1.4em; }
+.x2    { background-color:#e0e0e0; padding:0.3em 0em; width:48%; font-size:1.4em; }
+.x3    { background-color:#e0e0e0; padding:0.3em 0em; width:32%; font-size:1.4em; }
+.x4    { background-color:#e0e0e0; padding:0.3em 0em; width:24%; font-size:1.4em; }
 </style>
 <script>
 
 function gammaScoreinit() {
-  ajaxObj=[]; lastEvent=0; min1Avg=0; min10Avg=0; avgArray=[]; histArray={lastEvent:[],count:[]}; histTime=0; lastHistTime=0; rayAlarm=0; getAlarm();
+  ajaxObj=[]; appName="&nbsp;"; appDesc="&nbsp;"; requestAJAX('appName');
+  lastEvent=0; min1Avg=0; min10Avg=0; avgArray=[]; histArray={lastEvent:[],count:[]}; histTime=0; lastHistTime=0; rayAlarm=0; getAlarm(); id("clearBtn").style.color="#ffffff";
   doDisplay(); doDisplayRay(); doDisplayHist(); getRayID=window.setInterval("getRay();",1000); }
   
 function doDisplay() {
   id("lastEvent").innerHTML=lastEvent+" µSv/h";
   id("min1Avg").innerHTML=min1Avg+" µSv/h";
   id("min10Avg").innerHTML=min10Avg+" µSv/h";
-  if (rayAlarm==1) { id("alarmBtn").style.color="#ffffff"; } else { id("alarmBtn").style.color="#404040"; } }
+  if (rayAlarm==1) { id("alarmBtn").style.color="#ffffff"; } else { id("alarmBtn").style.color="#000000"; } }
 
 function doRange(doSet) { }
 
 function getRay() { requestAJAX('getRay'); }
 function clearRay() {
-  id("clearBtn").style.color="#404040"; avgArray=[]; lastEvent=0; min1Avg=0; min10Avg=0;
+  id("clearBtn").style.color="#000000"; avgArray=[]; lastEvent=0; min1Avg=0; min10Avg=0;
   histArray={lastEvent:[],count:[]}; histTime=0; lastHistTime=0;
   requestAJAX('clearRay'); doDisplay(); doDisplayRay(); doDisplayHist(); }
 function getAlarm() { requestAJAX('getAlarm'); }
@@ -128,19 +130,22 @@ function requestAJAX(value) {
 
 function replyAJAX(event) {
   if (event.target.status==200) {
-    if (event.target.url=="getRay") { lastEvent=event.target.responseText.split(",")[0]*1; min1Avg=event.target.responseText.split(",")[1]*1;
+    if (event.target.url=="appName") {
+      id("appName").innerHTML=event.target.responseText.split(",")[0];
+      id("appDesc").innerHTML=event.target.responseText.split(",")[1]; }
+    else if (event.target.url=="getRay") { lastEvent=event.target.responseText.split(",")[0]*1; min1Avg=event.target.responseText.split(",")[1]*1;
                                       min10Avg=event.target.responseText.split(",")[2]*1; histTime=event.target.responseText.split(",")[3]*1;
                                       doDisplay(); doDisplayRay(); doDisplayHist(); }
-    if (event.target.url=="getAlarm") { rayAlarm=event.target.responseText.split(",")[0]*1; doDisplay(); }
-    if (event.target.url=="clearRay") { id("clearBtn").style.color="#ffffff"; } } }
+    else if (event.target.url=="getAlarm") { rayAlarm=event.target.responseText.split(",")[0]*1; doDisplay(); }
+    else if (event.target.url=="clearRay") { id("clearBtn").style.color="#ffffff"; } } }
 
 function mapValue(value,inMin,inMax,outMin,outMax) { return (value-inMin)*(outMax-outMin)/(inMax-inMin)+outMin; }
 function id(id) { return document.getElementById(id); }
 
 </script></head><body onload="gammaScoreinit();">
 
-<div><div class="x0a">gammaScore</div></div>
-<div><div class="x0b">Gamma Ray Detector</div></div>
+<div><div class="x0a" id="appName">&nbsp;</div></div>
+<div><div class="x0b" id="appDesc">&nbsp;</div></div>
 
 <div class="x1" onclick="location.replace('/chooseAP');">Choose WLAN AP</div></div>
 
