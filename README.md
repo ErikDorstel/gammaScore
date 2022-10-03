@@ -4,6 +4,8 @@ ESP32 and GDK101 based Gamma Ray Detector
 * uses GDK101 as PIN diode gamma ray detector
 * works as WLAN client and AP (AP chooser included)
 * WebUI with IP address 192.168.4.1
+* mDNS hostname gammaScore.local
+* DNS hostname gammaScore.local (WLAN AP mode only)
 * acoustic alarm (click sounds)
 * measurement of last event gamma ray in µSv/h
 * measurement of 1 minute average gamma ray in µSv/h
