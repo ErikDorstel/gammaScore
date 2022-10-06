@@ -7,7 +7,8 @@ struct wlanConfigStruct {
   const char* passwordAP="";
   String ssidStation="";
   String passwordStation="";
-  boolean statusStation=false; };
+  boolean statusStation=false;
+  int reconnectCount=0; };
 
 struct wlanConfigStruct wlanConfig;
 
@@ -17,7 +18,8 @@ void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info) {
   preferences.begin("wlanAuth",false); String ssidStationOld=preferences.getString("ssidStation",""); String passwordStationOld=preferences.getString("passwordStation",""); preferences.end();
   if (ssidStationOld!=wlanConfig.ssidStation || passwordStationOld!=wlanConfig.passwordStation) {
     preferences.begin("wlanAuth",false); preferences.putString("ssidStation",wlanConfig.ssidStation); preferences.putString("passwordStation",wlanConfig.passwordStation); preferences.end(); }
-  wlanConfig.statusStation=true; if (debug) { Serial.println("WLAN Station " + wlanConfig.ssidStation + " Client with IP address " + WiFi.localIP().toString() + " connected."); } }
+  wlanConfig.statusStation=true; wlanConfig.reconnectCount=0;
+  if (debug) { Serial.println("WLAN Station " + wlanConfig.ssidStation + " Client with IP address " + WiFi.localIP().toString() + " connected."); } }
 
 void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info) {
   wlanConfig.statusStation=false; WiFi.disconnect(); wlanTimer=millis()+4000;
@@ -42,5 +44,8 @@ void reconnectWLAN() { WiFi.disconnect(); connectWLAN(); }
 void wlanWorker() {
   if (millis()>=wlanTimer) { wlanTimer=millis()+20000;
     if (!wlanConfig.statusStation) {
+      if (wlanConfig.reconnectCount>5) {
+        if (debug) { Serial.println("WLAN Station get stored credentials."); }
+        preferences.begin("wlanAuth",false); wlanConfig.ssidStation=preferences.getString("ssidStation","empty"); wlanConfig.passwordStation=preferences.getString("passwordStation","empty"); preferences.end(); }
       if (debug) { Serial.println("WLAN Station autoreconnect."); }
-      reconnectWLAN(); } } }
+      wlanConfig.reconnectCount++; reconnectWLAN(); } } }

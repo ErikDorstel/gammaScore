@@ -33,7 +33,7 @@ String httpget(String request) {
   else if (request.indexOf("/connectAP")>=0) {
     int a=request.indexOf(",")+1; int b=request.indexOf(",",a)+1;
     if (!wlanConfig.statusStation || WiFi.softAPgetStationNum()==0) {
-      wlanConfig.ssidStation=h2a(request.substring(a,b-1)); wlanConfig.passwordStation=h2a(request.substring(b)); reconnectWLAN(); }
+      wlanConfig.ssidStation=h2a(request.substring(a,b-1)); wlanConfig.passwordStation=h2a(request.substring(b)); wlanConfig.reconnectCount=0; reconnectWLAN(); }
     else { if (debug) { Serial.println("WLAN Station reconnect prevented."); } } }
 
   // Default page
