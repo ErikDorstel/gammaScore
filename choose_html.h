@@ -40,7 +40,7 @@ function connectAP() {
   if (document.getElementById("APName").value!="" && document.getElementById("APPassword").value!="") {
     document.getElementById("scanAP").innerHTML="<div class=\"x1\">&nbsp;</div>";
     document.getElementById("statusAP").innerHTML="<div class=\"x1\">Connecting WLAN AP "+document.getElementById("APName").value+" ...</div>";
-    window.clearInterval(statusChooseID); window.setTimeout("initChoose();",5000);
+    window.clearInterval(statusChooseID); window.setTimeout("initChoose();",10000);
     requestAJAX("connectAP,"+a2h(document.getElementById("APName").value)+","+a2h(document.getElementById("APPassword").value)); } }
 
 function requestAJAX(value) {
