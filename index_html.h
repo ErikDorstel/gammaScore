@@ -27,20 +27,20 @@ td     { text-align:right; }
 
 function gammaScoreinit() {
   ajaxObj=[]; appName="&nbsp;"; appDesc="&nbsp;"; requestAJAX('appName');
-  lastEvent=0; min1Avg=0; min10Avg=0; avgArray=[]; histArray={lastEvent:[],count:[]}; histTime=0; lastHistTime=0; rayAlarm=0; getAlarm(); id("clearBtn").style.color="#ffffff";
+  lastEvent=0; min1Avg=0; min10Avg=0; avgArray=[]; histArray={lastEvent:[],count:[]}; histTime=0; lastHistTime=0; rayAlarm=0; getAlarm(); id("clearBtn").style.color="#000000";
   doDisplay(); doDisplayRay(); doDisplayHist(); getRayID=window.setInterval("getRay();",1000); }
   
 function doDisplay() {
   id("lastEvent").innerHTML=lastEvent+" µSv/h";
   id("min1Avg").innerHTML=min1Avg+" µSv/h";
   id("min10Avg").innerHTML=min10Avg+" µSv/h";
-  if (rayAlarm==1) { id("alarmBtn").style.color="#ffffff"; } else { id("alarmBtn").style.color="#000000"; } }
+  if (rayAlarm==1) { id("alarmBtn").style.color="#000000"; } else { id("alarmBtn").style.color="#f0f0f0"; } }
 
 function doRange(doSet) { }
 
 function getRay() { requestAJAX('getRay'); }
 function clearRay() {
-  id("clearBtn").style.color="#000000"; avgArray=[]; lastEvent=0; min1Avg=0; min10Avg=0;
+  id("clearBtn").style.color="#f0f0f0"; avgArray=[]; lastEvent=0; min1Avg=0; min10Avg=0;
   histArray={lastEvent:[],count:[]}; histTime=0; lastHistTime=0;
   requestAJAX('clearRay'); doDisplay(); doDisplayRay(); doDisplayHist(); }
 function getAlarm() { requestAJAX('getAlarm'); }
@@ -137,7 +137,7 @@ function replyAJAX(event) {
                                       min10Avg=event.target.responseText.split(",")[2]*1; histTime=event.target.responseText.split(",")[3]*1;
                                       doDisplay(); doDisplayRay(); doDisplayHist(); }
     else if (event.target.url=="getAlarm") { rayAlarm=event.target.responseText.split(",")[0]*1; doDisplay(); }
-    else if (event.target.url=="clearRay") { id("clearBtn").style.color="#ffffff"; } } }
+    else if (event.target.url=="clearRay") { id("clearBtn").style.color="#000000"; } } }
 
 function mapValue(value,inMin,inMax,outMin,outMax) { return (value-inMin)*(outMax-outMin)/(inMax-inMin)+outMin; }
 function id(id) { return document.getElementById(id); }
@@ -147,7 +147,7 @@ function id(id) { return document.getElementById(id); }
 <div><div class="x0a" id="appName">&nbsp;</div></div>
 <div><div class="x0b" id="appDesc">&nbsp;</div></div>
 
-<div class="x1" onclick="location.replace('/chooseAP');">Choose WLAN AP</div></div>
+<div><div class="x1" onclick="location.replace('/chooseAP');">Choose WLAN AP</div></div>
 
 <div>
 <div><div class="x3">last Event</div>
